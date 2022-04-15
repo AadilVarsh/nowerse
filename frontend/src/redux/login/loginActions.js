@@ -1,42 +1,46 @@
-import axios from "axios"
+import axios from "axios";
 import {
-  LOGIN_USER_FAILURE,
-  LOGIN_USER_SUCCESS,
-  LOGIN_USER_REQUEST,
-} from "./loginTypes"
+    LOGIN_USER_FAILURE,
+    LOGIN_USER_SUCCESS,
+    LOGIN_USER_REQUEST,
+} from "./loginTypes";
 
 const loginUserRequest = () => {
-  return {
-    type: LOGIN_USER_REQUEST,
-  }
-}
+    return {
+        type: LOGIN_USER_REQUEST,
+    };
+};
 export const loginUserSuccess = (data) => {
-  return {
-    type: LOGIN_USER_SUCCESS,
-    payload: data,
-  }
-}
+    return {
+        type: LOGIN_USER_SUCCESS,
+        payload: data,
+    };
+};
 const loginUserFailure = (error) => {
-  return {
-    type: LOGIN_USER_FAILURE,
-    payload: error,
-  }
-}
+    return {
+        type: LOGIN_USER_FAILURE,
+        payload: error,
+    };
+};
 
 export const login = (data) => {
-  return async (dispatch) => {
-    dispatch(loginUserRequest)
-    try {
-      const json = JSON.stringify(data)
-      const res = await axios.post("/api/auth/login", json, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      dispatch(loginUserSuccess(res.data))
-      localStorage.setItem("userInfo", JSON.stringify(res.data))
-    } catch (error) {
-      dispatch(loginUserFailure(error.response.data.err))
-    }
-  }
-}
+    return async (dispatch) => {
+        dispatch(loginUserRequest);
+        try {
+            const json = JSON.stringify(data);
+            const res = await axios.post(
+                process.env.SERVER + "/api/auth/login",
+                json,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            dispatch(loginUserSuccess(res.data));
+            localStorage.setItem("userInfo", JSON.stringify(res.data));
+        } catch (error) {
+            dispatch(loginUserFailure(error.response.data.err));
+        }
+    };
+};
